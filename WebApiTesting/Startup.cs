@@ -31,6 +31,7 @@ namespace WebApiTesting
             //services.AddDbContext<ProductoContext>(opt => opt.UseInMemoryDatabase("ProductoList"));
             var conexion = Configuration.GetConnectionString("InventarioDatabase");
             services.AddDbContext<InventarioContext>(options => options.UseSqlServer(conexion));
+
             services.AddControllers();
         }
 
@@ -42,10 +43,18 @@ namespace WebApiTesting
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+
+
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:1841",
+                                    "https://localhost:1841").AllowAnyMethod().AllowAnyHeader();
+            });
+
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +23,22 @@ namespace WebApiTesting.Controllers
         }
 
         // GET: api/Productos
+ //       [DisableCors]
+        [AllowAnonymous]
+       // [DisableCors]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Productos>>> GetProductos()
-        {
-            return await _context.Productos.ToListAsync();
+        //public async Task<ActionResult<IEnumerable<Productos>>> GetProductos()
+        //{
+        //    return await _context.Productos.ToListAsync();
+        //}
+
+        public Wrapper<IEnumerable<Productos>> GetProductos()
+        { 
+            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
+            wrapper.Success = true;
+            wrapper.Result = _context.Productos.ToList();
+
+            return wrapper;
         }
 
         // GET: api/Productos/5
