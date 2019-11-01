@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using WebApiTesting.Models;
+using RepositoryPattern.Common.Data;
 
 namespace WebApiTesting
 {
@@ -31,7 +32,8 @@ namespace WebApiTesting
             //services.AddDbContext<ProductoContext>(opt => opt.UseInMemoryDatabase("ProductoList"));
             var conexion = Configuration.GetConnectionString("InventarioDatabase");
             services.AddDbContext<InventarioContext>(options => options.UseSqlServer(conexion));
-
+            services.AddScoped<DbContext, InventarioContext>();
+            services.AddTransient<IGenericRepository<Productos>, GenericRepository<Productos>>();
             services.AddControllers();
         }
 

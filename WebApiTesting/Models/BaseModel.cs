@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebApiTesting.Models
 {
-    public class Wrapper<T>
+    public class BaseModel
     {
-        public bool Success { get; set; }
-        public T Result { get; set; }
+
     }
 }

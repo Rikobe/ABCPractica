@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WebApiTesting.Models
 {
-    public partial class Productos
+    public partial class Productos : BaseModel
     {
         public long ProductoId { get; set; }
         public string Nombre { get; set; }
