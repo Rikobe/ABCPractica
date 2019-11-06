@@ -15,18 +15,13 @@ namespace WebApiTesting.Controllers
     [ApiController]
     public class ProductosController : ControllerBase
     {
-       // private readonly InventarioContext _context;
         private readonly IGenericRepository<Productos> _repository;
 
-
-        //public ProductosController(InventarioContext context,IGenericRepository<Productos> repository)
         public ProductosController(IGenericRepository<Productos> repository)
         {
             _repository = repository;
-            //_context = context;
         }
         
-
         [AllowAnonymous]
         [HttpGet]
         public Wrapper<IEnumerable<Productos>> GetProductos()
@@ -40,65 +35,82 @@ namespace WebApiTesting.Controllers
         }
 
         // GET: api/Productos/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Productos>> GetProductos(long id)
-        //{
-        //    var productos = await _context.Productos.FindAsync(id);
+        [HttpGet("{id}")]
+        public Wrapper<IEnumerable<Productos>>  GetProductos(long id)
+        {
+            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
 
-        //    if (productos == null)
-        //    {
-        //        return NotFound();
-        //    }
+            wrapper.Result = _repository.Find(producto => producto.ProductoId == id);
 
-        //    return productos;
-        //}
+            if (wrapper.Result == null)
+            {
+                wrapper.Success = false;
+            }
+            else
+            {
+                wrapper.Success = true;
+            }
+            return wrapper;
+        }
 
-        //// PUT: api/Productos/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        //// more details see https://aka.ms/RazorPagesCRUD.
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutProductos(long id, Productos productos)
-        //{
-        //    if (id != productos.ProductoId)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(productos).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ProductosExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
+        // PUT: api/Productos/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPut("{id}")]
+        
+        public Wrapper<IEnumerable<Productos>> PutProductos(long id, Productos producto)
+        {
+            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
+            if (id != producto.ProductoId)
+            {
+                wrapper.Success = false;
+            }
+            else
+            {
+                wrapper.Success = true;
+                _repository.Edit(producto);
+                _repository.Save();
+                wrapper.Result = _repository.Find(productoModified => productoModified.ProductoId == producto.ProductoId);
+            }
+            return wrapper;
+        }
 
         //// POST: api/Productos
         //// To protect from overposting attacks, please enable the specific properties you want to bind to, for
         //// more details see https://aka.ms/RazorPagesCRUD.
-        //[HttpPost]
-        //public async Task<ActionResult<Productos>> PostProductos(Productos productos)
-        //{
-        //    _context.Productos.Add(productos);
-        //    await _context.SaveChangesAsync();
+        ///
+        
+        [HttpPost]
+        public Wrapper<IEnumerable<Productos>> PostProductos(Productos producto)
+        {
+            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
 
-        //    return CreatedAtAction(nameof(GetProductos), new { id = productos.ProductoId }, productos);
-        //}
+            _repository.Add(producto);
+            _repository.Save();
+
+            wrapper.Result = _repository.Find(productoAgregado => productoAgregado.ProductoId == producto.ProductoId);
+
+            return wrapper;
+        }
 
         //// DELETE: api/Productos/5
-        //[HttpDelete("{id}")]
+        [HttpDelete("{id}")]
+        
+        public Wrapper<IEnumerable<Productos>> DeleteProductos(long id)
+        {
+            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
+
+            if (_repository.Find(producto => producto.ProductoId == id) == null)
+            {
+                wrapper.Success = false;
+            }
+            else
+            {
+                wrapper.Success = true;
+            }
+
+            return wrapper;
+        }
         //public async Task<ActionResult<Productos>> DeleteProductos(long id)
         //{
         //    var productos = await _context.Productos.FindAsync(id);
