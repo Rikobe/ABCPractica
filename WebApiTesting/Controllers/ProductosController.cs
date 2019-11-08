@@ -58,9 +58,9 @@ namespace WebApiTesting.Controllers
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         
-        public Wrapper<IEnumerable<Productos>> PutProductos(long id, Productos producto)
+        public Wrapper<Productos> PutProductos(long id, Productos producto)
         {
-            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
+            Wrapper<Productos> wrapper = new Wrapper<Productos>();
             if (id != producto.ProductoId)
             {
                 wrapper.Success = false;
@@ -70,7 +70,7 @@ namespace WebApiTesting.Controllers
                 wrapper.Success = true;
                 _repository.Edit(producto);
                 _repository.Save();
-                wrapper.Result = _repository.Find(productoModified => productoModified.ProductoId == producto.ProductoId);
+                wrapper.Result = producto;
             }
             return wrapper;
         }
@@ -81,14 +81,15 @@ namespace WebApiTesting.Controllers
         ///
         
         [HttpPost]
-        public Wrapper<IEnumerable<Productos>> PostProductos(Productos producto)
+        public Wrapper<Productos> PostProductos(Productos producto)
         {
-            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
+            Wrapper<Productos> wrapper = new Wrapper<Productos>();
 
             _repository.Add(producto);
             _repository.Save();
 
-            wrapper.Result = _repository.Find(productoAgregado => productoAgregado.ProductoId == producto.ProductoId);
+            wrapper.Success = true;
+            wrapper.Result = producto;
 
             return wrapper;
         }
@@ -96,9 +97,9 @@ namespace WebApiTesting.Controllers
         //// DELETE: api/Productos/5
         [HttpDelete("{id}")]
         
-        public Wrapper<IEnumerable<Productos>> DeleteProductos(long id)
+        public Wrapper<Productos> DeleteProductos(long id)
         {
-            Wrapper<IEnumerable<Productos>> wrapper = new Wrapper<IEnumerable<Productos>>();
+            Wrapper<Productos> wrapper = new Wrapper<Productos>();
 
             if (_repository.Find(producto => producto.ProductoId == id) == null)
             {

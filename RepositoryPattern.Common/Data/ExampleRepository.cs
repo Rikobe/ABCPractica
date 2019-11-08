@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace RepositoryPattern.Common.Data
 {
-    class ExampleRepository<T> : IGenericRepository<T> where T : class
+    public class ExampleRepository<T> : IGenericRepository<T> where T : class
     {
-        internal DbContext context;
-        public ExampleRepository(DbContext db)
+        internal DbContext _context;
+        public ExampleRepository(DbContext context)
         {
-            context = db;
+            _context = context;
         }
         public void Add(T entity)
         {
@@ -28,14 +29,17 @@ namespace RepositoryPattern.Common.Data
             throw new NotImplementedException();
         }
 
-        public IQueryable<T> Find(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        public IQueryable<T> Find(Expression<Func<T, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
         public IQueryable<T> GetAll()
         {
-            throw new NotImplementedException();
+            //IQueryable<T> query = _context.Set<T>();
+
+            //return query;
+            throw new InvalidProgramException();
         }
 
         public void Save()

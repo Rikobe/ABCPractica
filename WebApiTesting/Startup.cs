@@ -33,7 +33,9 @@ namespace WebApiTesting
             var conexion = Configuration.GetConnectionString("InventarioDatabase");
             services.AddDbContext<InventarioContext>(options => options.UseSqlServer(conexion));
             services.AddScoped<DbContext, InventarioContext>();
+            //services.AddTransient<IGenericRepository<Productos>, ExampleRepository<Productos>>();
             services.AddTransient<IGenericRepository<Productos>, GenericRepository<Productos>>();
+
             services.AddControllers();
         }
 
