@@ -2,49 +2,49 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryPattern.Common.Data
 {
-    public class ExampleRepository<T> : IGenericRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         internal DbContext _context;
-        public ExampleRepository(DbContext context)
+        
+        public Repository(DbContext context)
         {
             _context = context;
         }
         public void Add(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Add(entity);
         }
 
         public void Delete(T entity)
         {
-            throw new NotImplementedException();
+            _context.Set<T>().Remove(entity);
         }
 
         public void Edit(T entity)
         {
-            throw new NotImplementedException();
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         public IQueryable<T> Find(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _context.Set<T>().Where(predicate);
+            return query;
         }
 
         public IQueryable<T> GetAll()
         {
-            //IQueryable<T> query = _context.Set<T>();
-
-            //return query;
-            throw new InvalidProgramException();
+            IQueryable<T> query = _context.Set<T>();
+            return query;
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _context.SaveChanges();
         }
     }
 }

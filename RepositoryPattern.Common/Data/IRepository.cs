@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryPattern.Common.Data
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         IQueryable<T> GetAll();
         IQueryable<T> Find(Expression<Func<T, bool>> predicate);
